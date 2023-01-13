@@ -1,0 +1,80 @@
+{
+  "rules": {
+    "word": {
+      ".read": "auth != null",
+      ".write": false
+    },
+    "wordBank": {
+      ".read": "auth != null",
+      ".write": false
+    },
+    "users": {
+      ".indexOn": ["highScore", "wins"],
+      ".read": "auth !== null",
+      "$uid": {
+        ".write": "$uid === auth.uid",
+        ".read": true
+      }
+    },
+    "games": {
+      ".indexOn": ["open", "timestamp"],
+      ".read": true,
+      ".write": "auth !== null",
+      "$game": {
+        "taken": {
+          ".write": "auth !== null"
+        },
+        "createdAt": {
+          ".write": "auth !== null"
+        },
+        "open": {
+          ".write": "auth !== null"
+        },
+        "keyword": {
+          ".write": "auth !== null"
+        },
+        "bank": {
+          ".write": "auth !== null"
+        },
+        "createdBy": {
+          ".write": "auth !== null"
+        },
+        "name": {
+          ".write": "auth !== null"
+        },
+        "players": {
+          "$player": {
+            ".write": "$player === auth.uid"
+          }
+        },
+        ".write": "!data.exists()"
+      }
+    },
+    "gameRounds": {
+      ".indexOn": "timestamp",
+      ".read": "auth !== null",
+      ".write": "auth !== null"
+    },
+    "gamePlayers": {
+      ".indexOn": "timestamp",
+      ".read": "auth !== null",
+      "$gameid": {
+        ".write": "auth !== null",
+        ".read": "auth !== null",
+        "$playerid": {
+          "score": {
+            ".validate": "$playerid === auth.uid"
+          },
+          "color": {
+            ".validate": "$playerid === auth.uid"
+          }
+        }
+      }
+    },
+    "highScoreDuo": {
+      ".indexOn": "score",
+      ".read": true,
+      ".write": "auth !== null"
+    }
+  }
+}
